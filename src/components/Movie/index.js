@@ -20,51 +20,99 @@ class Movie extends Component {
 
 	componentDidMount() {
 		const { match } = this.props;
-		this.setState({ loading: true });
-		const endpoint = `${API_URL}movie/${match.params.movieId}?api_key=${API_KEY}&language=en-US`;
-
-		this.fetchItems(endpoint);
+		if (sessionStorage.getItem(`${match.params.movieId}`)) {
+			const state = JSON.parse(
+				sessionStorage.getItem(`${match.params.movieId}`)
+			);
+			this.setState({ ...state });
+		} else {
+			this.setState({ loading: true });
+			const endpoint = `${API_URL}movie/${match.params.movieId}?api_key=${API_KEY}&language=en-US`;
+			this.fetchItems(endpoint);
+		}
 	}
 
-	fetchItems = endpoint => {
+	// async await
+	fetchItems = async endpoint => {
 		const { match } = this.props;
-		fetch(endpoint)
-			.then(result => result.json())
-			.then(result => {
-				console.log("result:", result);
-				if (result.status_code) {
-					this.setState({ loading: false });
-				} else {
-					this.setState({ movie: result }, () => {
-						//	fetch actors
-						const endpoint = `${API_URL}movie/${match.params.movieId}/credits?api_key=${API_KEY}`;
 
-						fetch(endpoint)
-							.then(result => result.json())
-							.then(result => {
-								console.log("results1:", result);
-								const directors = result.crew.filter(
-									member => member.job === "Director"
-								);
+		try {
+			const result = await (await fetch(endpoint)).json();
 
-								this.setState({
-									actors: result.cast,
-									directors,
-									loading: false
-								});
-							});
-					});
-				}
-			})
-			.catch(error => console.log("error:", error));
+			if (result.status_code) {
+				this.setState({ loading: false });
+			} else {
+				this.setState({ movie: result });
+				const creditsEndpoint = `${API_URL}movie/${match.params.movieId}/credits?api_key=${API_KEY}`;
+				const creditsResult = await (await fetch(creditsEndpoint)).json();
+				const directors = creditsResult.crew.filter(
+					member => member.job === "Director"
+				);
+
+				this.setState(
+					{
+						actors: creditsResult.cast,
+						directors,
+						loading: false
+					},
+					() => {
+						sessionStorage.setItem(
+							`${match.params.movieId}`,
+							JSON.stringify(this.state)
+						);
+					}
+				);
+			}
+		} catch (err) {
+			console.log(err);
+		}
 	};
+
+	// fetchItems = endpoint => {
+	// 	const { match } = this.props;
+	// 	fetch(endpoint)
+	// 		.then(result => result.json())
+	// 		.then(result => {
+	// 			if (result.status_code) {
+	// 				this.setState({ loading: false });
+	// 			} else {
+	// 				this.setState({ movie: result }, () => {
+	// 					//	fetch actors
+	// 					const endpoint = `${API_URL}movie/${match.params.movieId}/credits?api_key=${API_KEY}`;
+	//
+	// 					fetch(endpoint)
+	// 						.then(result => result.json())
+	// 						.then(result => {
+	// 							const directors = result.crew.filter(
+	// 								member => member.job === "Director"
+	// 							);
+	//
+	// 							this.setState(
+	// 								{
+	// 									actors: result.cast,
+	// 									directors,
+	// 									loading: false
+	// 								},
+	// 								() => {
+	// 									sessionStorage.setItem(
+	// 										`${match.params.movieId}`,
+	// 										JSON.stringify(this.state)
+	// 									);
+	// 								}
+	// 							);
+	// 						});
+	// 				});
+	// 			}
+	// 		})
+	// 		.catch(error => console.log("error:", error));
+	// };
 
 	render() {
 		const { location } = this.props;
 		const { movie, directors, actors, loading } = this.state;
 		return (
 			<div className='rmdb-movie'>
-				{this.state.movie ? (
+				{movie ? (
 					<div>
 						<Navigation movie={location.movieName} />
 						<MovieInfo movie={movie} directors={directors} />
