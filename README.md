@@ -2,7 +2,7 @@
 
 ## For this project I use:
 **Data:**
-`https://www.themoviedb.org/`
+`[The Movie DB API](https://www.themoviedb.org)`
 
 **Front-end:**
 `react, react-dom, react-fontawesome, react-router-dom`
@@ -12,4 +12,4 @@
 - npm install
 - npm start
 
-## or just follow this link [DevConnector](https://koylyakandriy.github.io/RMDB/)
+## or just follow this link [The React DB](https://koylyakandriy.github.io/RMDB/)
