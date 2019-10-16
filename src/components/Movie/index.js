@@ -68,45 +68,6 @@ class Movie extends Component {
 		}
 	};
 
-	// fetchItems = endpoint => {
-	// 	const { match } = this.props;
-	// 	fetch(endpoint)
-	// 		.then(result => result.json())
-	// 		.then(result => {
-	// 			if (result.status_code) {
-	// 				this.setState({ loading: false });
-	// 			} else {
-	// 				this.setState({ movie: result }, () => {
-	// 					//	fetch actors
-	// 					const endpoint = `${API_URL}movie/${match.params.movieId}/credits?api_key=${API_KEY}`;
-	//
-	// 					fetch(endpoint)
-	// 						.then(result => result.json())
-	// 						.then(result => {
-	// 							const directors = result.crew.filter(
-	// 								member => member.job === "Director"
-	// 							);
-	//
-	// 							this.setState(
-	// 								{
-	// 									actors: result.cast,
-	// 									directors,
-	// 									loading: false
-	// 								},
-	// 								() => {
-	// 									sessionStorage.setItem(
-	// 										`${match.params.movieId}`,
-	// 										JSON.stringify(this.state)
-	// 									);
-	// 								}
-	// 							);
-	// 						});
-	// 				});
-	// 			}
-	// 		})
-	// 		.catch(error => console.log("error:", error));
-	// };
-
 	render() {
 		const { location } = this.props;
 		const { movie, directors, actors, loading } = this.state;
