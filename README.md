@@ -2,7 +2,7 @@
 
 ## For this project I use:
 **Data:**
-`[The Movie DB API](https://www.themoviedb.org)`
+[The Movie DB API](https://www.themoviedb.org)
 
 **Front-end:**
 `react, react-dom, react-fontawesome, react-router-dom`
