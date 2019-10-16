@@ -1,5 +1,7 @@
 # RMDB
 
+*It is very simple React Project*
+
 ## For this project I use:
 **Data:**
 [The Movie DB API](https://www.themoviedb.org)
